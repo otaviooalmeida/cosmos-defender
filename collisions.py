@@ -1,6 +1,3 @@
-
-
-
 def collision(self): 
     for laser in self.lasers[:]: # Se for o inimigo tocando no laser do jogador, o inimigo morre e o jogador pontua
         for asteroid in self.asteroids[:]:
