@@ -1,6 +1,3 @@
-######## ARQUIVO COM AS CLASSES UTILIZADAS NO CÓDIGO PRINCIPAL ########
-# Otávio Almeida - 169502
-
 import pyxel
 
 class Ship:
