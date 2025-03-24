@@ -1,6 +1,3 @@
-######## ARQUIVO PRINCIPAL DO JOGO "COSMOS DEFENDER" ########
-# Otávio Almeida - 169502
-
 import pyxel
 from logic import Logic
 from classes import Ship, Boss
