@@ -1,7 +1,9 @@
 # 🚀 Cosmos Defender 🌌
+
 Um jogo de naves 2D onde você deve defender o espaço de ondas de inimigos e enfrentar um chefe desafiador!
 
 📌 Recursos
+
 🛸 Controle uma nave espacial com movimentação fluida
 
 🔫 Dispare lasers para destruir inimigos
@@ -28,6 +30,7 @@ Um jogo de naves 2D onde você deve defender o espaço de ondas de inimigos e en
 3. Execute o jogo (python main.py)
 
 🎮 Controles
+
 WASD → Movimentação
 
 Espaço → Atirar
@@ -39,4 +42,5 @@ Esc → Sair do jogo
 Pyxel
 
 🤝 Contribuição
+
 Sinta-se à vontade para abrir issues ou enviar pull requests para melhorias no jogo!
