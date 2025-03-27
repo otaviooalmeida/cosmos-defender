@@ -20,6 +20,7 @@ Um jogo de naves espaciais 2D onde você deve defender o espaço de ondas de ini
 
   Tela inicial
 ![image](https://github.com/user-attachments/assets/cad3717a-4498-4c7b-9359-92048e2eda3f)
+<img src="https://github.com/user-attachments/assets/cad3717a-4498-4c7b-9359-92048e2eda3f" alt="Descrição da Imagem" width="400">
 
   Último nível
 ![image](https://github.com/user-attachments/assets/5ac8d938-1fb3-4abc-92cb-d3b34cf50aa0)
