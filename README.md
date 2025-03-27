@@ -1,12 +1,14 @@
 # 🚀 Cosmos Defender 🌌
 
-Um jogo de naves 2D onde você deve defender o espaço de ondas de inimigos e enfrentar um chefe desafiador!
+Um jogo de naves espaciais 2D onde você deve defender o espaço de ondas de inimigos e enfrentar um chefe desafiador!
 
 # 📌 Recursos
 
 🛸 Controle uma nave espacial com movimentação fluida
 
 🔫 Dispare lasers para destruir inimigos
+
+⚡ Power-ups especiais para melhorar sua nave
 
 🏆 Sistema de pontuação baseado no tempo sobrevivido
 
