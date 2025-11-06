@@ -32,7 +32,7 @@ Um jogo de naves espaciais 2D onde você deve defender o espaço de ondas de ini
 
 1. Clone o repositório (git clone https://github.com/otaviooalmeida/cosmos-defender.git)
 2. Instale as dependências (pip install -r requirements.txt)
-3. Execute o jogo (python main.py)
+3. Execute o jogo (python cosmos_defender.py)
 
 # 🎮 Controles
 
@@ -45,7 +45,4 @@ Esc → Sair do jogo
 # 🚀 Tecnologias Usadas
 
 Pyxel
-
-# 🤝 Contribuição
-
-Sinta-se à vontade para abrir issues ou enviar pull requests para melhorias no jogo!
+Esper
