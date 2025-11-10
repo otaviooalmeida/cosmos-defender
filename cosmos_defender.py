@@ -1,6 +1,5 @@
 import pyxel
 import esper
-# print(esper.__file__) # Removendo a linha de debug
 from scripts.components import *
 from scripts.systems import (
     PlayerInputSystem, MovementSystem, BossMovementSystem, BoundarySystem,
@@ -73,7 +72,7 @@ class CosmosDefender:
         if self.in_menu:
             if pyxel.btnp(pyxel.KEY_I):
                 self.in_menu = False
-                pyxel.play(0, 5, loop=True)
+                pyxel.play(0, 1, loop=True)
             if pyxel.btnp(pyxel.KEY_ESCAPE):
                 pyxel.quit()
             return
@@ -82,7 +81,7 @@ class CosmosDefender:
             if pyxel.btnp(pyxel.KEY_R):
                 self.setup_game()
                 self.in_menu = False
-                pyxel.play(0, 5, loop=True)
+                pyxel.play(0, 1, loop=True)
             return
 
         # Atualiza a posição do background
@@ -97,11 +96,11 @@ class CosmosDefender:
             if player_comp.lives <= 0:
                 self.game_over = True
                 pyxel.stop()
-                pyxel.play(2, 6)
+                pyxel.play(2, 0)
         else:
             self.game_over = True
             pyxel.stop()
-            pyxel.play(2, 6)
+            pyxel.play(2, 0)
 
 
     def draw(self):

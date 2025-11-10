@@ -93,12 +93,12 @@ class PlayerInputSystem(esper.Processor):
         if pyxel.btn(pyxel.KEY_SPACE) and (pyxel.frame_count - player.last_shot_time > player.laser_cooldown):
             player.last_shot_time = pyxel.frame_count
             pyxel.play(2, 2)
-            self._create_laser(pos.x + 4, pos.y - 4, 'player', -self.game.laser_speed)
+            self._create_laser(pos.x + 4, pos.y - 4, 'player', 0, -self.game.laser_speed)
 
-    def _create_laser(self, x, y, laser_type, speed_y):
+    def _create_laser(self, x, y, laser_type, speed_x, speed_y):
         ent = self.world.create_entity()
         self.world.add_component(ent, Position(x, y))
-        self.world.add_component(ent, Velocity(y=speed_y))
+        self.world.add_component(ent, Velocity(x=speed_x, y=speed_y))
         self.world.add_component(ent, Laser(laser_type))
         self.world.add_component(ent, Sprite(f'{laser_type}_laser', 1, 3))
 
@@ -113,21 +113,22 @@ class ShootingSystem(esper.Processor):
             if pyxel.frame_count - shooter.last_shot > shooter.shoot_interval:
                 shooter.last_shot = pyxel.frame_count
                 laser_type = 'blue' if enemy.enemy_type == 'blue_ship' else 'red'
-                self._create_laser(pos.x + 2, pos.y + 3, laser_type, self.game.laser_speed)
+                self._create_laser(pos.x + 2, pos.y + 3, laser_type, 0, self.game.laser_speed)
         
         # Boss
         for ent, (pos, boss) in self.world.get_components(Position, Boss):
             if pyxel.frame_count - boss.last_shot > self.game.boss_shoot_interval:
                 boss.last_shot = pyxel.frame_count
-                self._create_laser(pos.x + 2, pos.y + 16, 'orange', self.game.laser_speed)
-                self._create_laser(pos.x + 14, pos.y + 16, 'orange', self.game.laser_speed)
+                self._create_laser(pos.x + 2, pos.y + 16, 'orange', -1, self.game.laser_speed)
+                self._create_laser(pos.x + 14, pos.y + 16, 'orange', 1, self.game.laser_speed)
 
-    def _create_laser(self, x, y, laser_type, speed_y):
+    def _create_laser(self, x, y, laser_type, speed_x, speed_y):
         ent = self.world.create_entity()
         self.world.add_component(ent, Position(x, y))
-        self.world.add_component(ent, Velocity(y=speed_y))
+        self.world.add_component(ent, Velocity(x=speed_x, y=speed_y))
         self.world.add_component(ent, Laser(laser_type))
         self.world.add_component(ent, Sprite(f'{laser_type}_laser', 1, 3))
+
 
 class MovementSystem(esper.Processor):
     """Move todas as entidades que possuem Posição e Velocidade."""
@@ -160,14 +161,19 @@ class CollisionSystem(esper.Processor):
         for laser_ent, (laser_pos, laser) in list(self.world.get_components(Position, Laser)):
             if laser.laser_type != 'player': continue
 
+            collided = False
             # vs Inimigos
             for enemy_ent, (enemy_pos, enemy, enemy_sprite) in list(self.world.get_components(Position, Enemy, Sprite)):
                 if self._check_collision(laser_pos, enemy_pos, enemy_sprite):
                     self.world.delete_entity(laser_ent, immediate=True)
                     self.world.delete_entity(enemy_ent, immediate=True)
                     player_comp.score += {'asteroid': 1, 'red_ship': 2, 'blue_ship': 3}[enemy.enemy_type]
+                    collided = True
                     break
             
+            if collided:
+                continue
+
             # vs Boss
             for boss_ent, (boss_pos, boss, boss_sprite) in list(self.world.get_components(Position, Boss, Sprite)):
                 if self._check_collision(laser_pos, boss_pos, boss_sprite):
