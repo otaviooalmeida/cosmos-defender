@@ -23,7 +23,7 @@ class CosmosDefender:
         self.level = 1
         self.enemy_speed = 1.0
         self.laser_speed = 3.0
-        self.scroll_y = 0 # Variável para o scroll do background
+        self.scroll_y = 0 
 
         # Timers de Spawn
         self.last_asteroid_spawn = 0
@@ -84,13 +84,10 @@ class CosmosDefender:
                 pyxel.play(0, 1, loop=True)
             return
 
-        # Atualiza a posição do background
         self.scroll_y = (self.scroll_y + 0.5) % pyxel.height
 
-        # Processa todos os sistemas
         self.world.process()
 
-        # Verifica condição de Game Over
         if self.world.get_component(Player):
             player_comp = self.world.get_component(Player)[0][1]
             if player_comp.lives <= 0:
@@ -130,14 +127,11 @@ class CosmosDefender:
             return
 
         # --- Desenho do Jogo ---
-        # Desenha o background com scroll
         pyxel.blt(0, self.scroll_y, 1, 0, 0, pyxel.width, pyxel.height, 0)
         pyxel.blt(0, self.scroll_y - pyxel.height, 1, 0, 0, pyxel.width, pyxel.height, 0)
 
-        # O RenderSystem cuida de desenhar todas as entidades
         self.render_processor.process()
 
-        # Desenha a UI (Vidas e Pontuação)
         if self.world.get_component(Player):
             player_comp = self.world.get_component(Player)[0][1]
             pyxel.text(5, 5, f"SCORE: {player_comp.score}", 7)

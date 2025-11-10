@@ -45,4 +45,5 @@ Esc → Sair do jogo
 # 🚀 Tecnologias Usadas
 
 Pyxel
+
 Esper
