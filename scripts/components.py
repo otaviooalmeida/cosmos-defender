@@ -15,7 +15,7 @@ class Velocity:
 @dataclass
 class Sprite:
     """Componente para informações de desenho (sprite)."""
-    sprite_type: str  # Ex: 'player', 'asteroid', 'blue_ship'
+    sprite_type: str 
     width: int
     height: int
 
@@ -30,7 +30,7 @@ class Player:
 @dataclass
 class Enemy:
     """Componente para marcar uma entidade como inimiga."""
-    enemy_type: str  # Ex: 'asteroid', 'blue_ship', 'red_ship'
+    enemy_type: str  
 
 @dataclass
 class Boss:
@@ -38,17 +38,17 @@ class Boss:
     health: int = 100
     max_health: int = 100
     last_shot: int = 0
-    direction: int = 1 # 1 para direita, -1 para esquerda
+    direction: int = 1 
 
 @dataclass
 class Laser:
     """Componente para marcar uma entidade como um laser."""
-    laser_type: str  # Ex: 'player', 'red', 'blue', 'orange'
+    laser_type: str  
 
 @dataclass
 class PowerUp:
     """Componente para marcar um power-up e seu tipo."""
-    power_type: str  # Ex: 'attack_speed', 'extra_life'
+    power_type: str  
 
 @dataclass
 class Shooter:
@@ -61,5 +61,5 @@ class PowerUpEffect:
     """Componente para gerenciar o estado de um power-up ativo no jogador."""
     active: bool = False
     start_time: int = 0
-    duration: int = 300  # Duração em frames (5 segundos a 60fps)
+    duration: int = 300  
     effect_type: str = ''

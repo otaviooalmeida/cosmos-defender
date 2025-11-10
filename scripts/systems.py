@@ -16,7 +16,6 @@ class LevelSystem(esper.Processor):
             return
 
         if not self.world.get_component(Player): return
-        # Corrigido: Desempacota o componente diretamente
         player_ent, player = self.world.get_component(Player)[0]
         
         if player.score >= self.game.level * 25:
@@ -54,7 +53,6 @@ class PowerUpSystem(esper.Processor):
     def process(self):
         if not self.world.get_component(Player): return
             
-        # Corrigido: Desempacota o componente diretamente
         player_ent, player = self.world.get_component(Player)[0]
         
         if not self.world.has_component(player_ent, PowerUpEffect):
@@ -83,13 +81,11 @@ class PlayerInputSystem(esper.Processor):
         
         player_ent, (pos, player, sprite) = self.world.get_components(Position, Player, Sprite)[0]
 
-        # Movimento
         if pyxel.btn(pyxel.KEY_A) and pos.x > 0: pos.x -= 2
         if pyxel.btn(pyxel.KEY_D) and pos.x < pyxel.width - sprite.width: pos.x += 2
         if pyxel.btn(pyxel.KEY_W) and pos.y > 0: pos.y -= 2
         if pyxel.btn(pyxel.KEY_S) and pos.y < pyxel.height - sprite.height: pos.y += 2
 
-        # Tiro
         if pyxel.btn(pyxel.KEY_SPACE) and (pyxel.frame_count - player.last_shot_time > player.laser_cooldown):
             player.last_shot_time = pyxel.frame_count
             pyxel.play(2, 2)
@@ -108,14 +104,12 @@ class ShootingSystem(esper.Processor):
         self.game = game_state
 
     def process(self):
-        # Inimigos com componente Shooter
         for ent, (pos, shooter, enemy) in self.world.get_components(Position, Shooter, Enemy):
             if pyxel.frame_count - shooter.last_shot > shooter.shoot_interval:
                 shooter.last_shot = pyxel.frame_count
                 laser_type = 'blue' if enemy.enemy_type == 'blue_ship' else 'red'
                 self._create_laser(pos.x + 2, pos.y + 3, laser_type, 0, self.game.laser_speed)
         
-        # Boss
         for ent, (pos, boss) in self.world.get_components(Position, Boss):
             if pyxel.frame_count - boss.last_shot > self.game.boss_shoot_interval:
                 boss.last_shot = pyxel.frame_count
@@ -157,12 +151,10 @@ class CollisionSystem(esper.Processor):
         if not self.world.get_component(Player): return
         player_ent, (player_pos, player_comp, player_sprite) = self.world.get_components(Position, Player, Sprite)[0]
 
-        # Colisão: Laser do Jogador vs Inimigos/Boss
         for laser_ent, (laser_pos, laser) in list(self.world.get_components(Position, Laser)):
             if laser.laser_type != 'player': continue
 
             collided = False
-            # vs Inimigos
             for enemy_ent, (enemy_pos, enemy, enemy_sprite) in list(self.world.get_components(Position, Enemy, Sprite)):
                 if self._check_collision(laser_pos, enemy_pos, enemy_sprite):
                     self.world.delete_entity(laser_ent, immediate=True)
@@ -174,7 +166,6 @@ class CollisionSystem(esper.Processor):
             if collided:
                 continue
 
-            # vs Boss
             for boss_ent, (boss_pos, boss, boss_sprite) in list(self.world.get_components(Position, Boss, Sprite)):
                 if self._check_collision(laser_pos, boss_pos, boss_sprite):
                     self.world.delete_entity(laser_ent, immediate=True)
@@ -184,7 +175,6 @@ class CollisionSystem(esper.Processor):
                         self.game.boss_death = True
                     break
 
-        # Colisão: Laser Inimigo vs Jogador
         for laser_ent, (laser_pos, laser) in list(self.world.get_components(Position, Laser)):
             if laser.laser_type == 'player': continue
             if self._check_collision(laser_pos, player_pos, player_sprite):
@@ -192,14 +182,12 @@ class CollisionSystem(esper.Processor):
                 player_comp.lives -= 1
                 break
         
-        # Colisão: Inimigo vs Jogador
         for enemy_ent, (enemy_pos, _, enemy_sprite) in list(self.world.get_components(Position, Enemy, Sprite)):
             if self._check_collision(enemy_pos, player_pos, player_sprite):
                 self.world.delete_entity(enemy_ent, immediate=True)
                 player_comp.lives -= 1
                 break
 
-        # Colisão: Power-up vs Jogador
         for pu_ent, (pu_pos, pu, pu_sprite) in list(self.world.get_components(Position, PowerUp, Sprite)):
             if self._check_collision(pu_pos, player_pos, player_sprite):
                 self._apply_power_up(player_ent, pu.power_type)
@@ -234,7 +222,6 @@ class BoundarySystem(esper.Processor):
     """Remove entidades que saem da tela e penaliza o jogador."""
     def process(self):
         if not self.world.get_component(Player): return
-        # Corrigido: Desempacota o componente diretamente
         player_ent, player_comp = self.world.get_component(Player)[0]
 
         for ent, (pos, _) in self.world.get_components(Position, (Enemy, Laser, PowerUp)):
@@ -257,7 +244,6 @@ class SpawnSystem(esper.Processor):
             
         if self.game.boss_active: return
 
-        # Spawn de Inimigos
         if pyxel.frame_count - self.game.last_blue_ship_spawn >= self.game.blue_ship_spawn_interval:
             self._spawn_enemy('blue_ship', 5, 3, self.game.blue_ship_shoot_interval)
             self.game.last_blue_ship_spawn = pyxel.frame_count
@@ -265,7 +251,6 @@ class SpawnSystem(esper.Processor):
             self._spawn_enemy('red_ship', 5, 3, self.game.red_ship_shoot_interval)
             self.game.last_red_ship_spawn = pyxel.frame_count
         
-        # Spawn de Power-ups
         if self.game.level >= 2 and pyxel.frame_count % 500 == 0:
             if len(self.world.get_component(PowerUp)) < 3:
                 power_up_type = choice(['attack_speed', 'decrease_enemy_speed'])
@@ -306,7 +291,6 @@ class RenderSystem(esper.Processor):
     def process(self):
         for ent, (pos, sprite) in self.world.get_components(Position, Sprite):
             s_type = sprite.sprite_type
-            # Sprites do Jogo
             if s_type == 'player': pyxel.blt(pos.x, pos.y, 2, 6, 6, 8, 7)
             elif s_type == 'asteroid': pyxel.blt(pos.x, pos.y, 2, 51, 11, 4, 4)
             elif s_type == 'red_ship': pyxel.blt(pos.x, pos.y, 2, 35, 11, 5, 3)
@@ -314,12 +298,10 @@ class RenderSystem(esper.Processor):
             elif s_type == 'attack_speed': pyxel.blt(pos.x, pos.y, 2, 1, 20, 5, 4)
             elif s_type == 'decrease_enemy_speed': pyxel.blt(pos.x, pos.y, 2, 9, 26, 5, 4)
             elif s_type == 'extra_life': pyxel.blt(pos.x, pos.y, 2, 10, 17, 5, 4)
-            # Lasers (usando rect para simplicidade)
             elif s_type == 'player_laser': pyxel.rect(pos.x, pos.y, 1, 3, 7)
             elif s_type == 'red_laser': pyxel.rect(pos.x, pos.y, 1, 3, 8)
             elif s_type == 'blue_laser': pyxel.rect(pos.x, pos.y, 1, 3, 12)
             elif s_type == 'orange_laser': pyxel.rect(pos.x, pos.y, 2, 4, 9)
-            # Boss
             elif s_type == 'boss':
                 pyxel.blt(pos.x, pos.y, 2, 16, 49, 17, 16)
                 if self.world.has_component(ent, Boss):
